@@ -3,8 +3,20 @@
 
 import * as React from 'react'
 
+const squaresKey = "squares"
+const initialiValue = Array(9).fill(null)
+
 function Board() {
-  const [squares, setSquares] = React.useState(Array(9).fill(null))
+  const [squares, setSquares] = React.useState(() => {
+    const storedSquares = window.localStorage.getItem(squaresKey)
+    return storedSquares
+      ? JSON.parse(storedSquares)
+      : initialiValue
+  })
+
+  React.useEffect(() => {
+    window.localStorage.setItem(squaresKey, JSON.stringify(squares))
+  }, [squares])
 
   const nextValue = calculateNextValue(squares)
   const winner = calculateWinner(squares)
@@ -23,7 +35,7 @@ function Board() {
   }
 
   function restart() {
-    setSquares(Array(9).fill(null))
+    setSquares(initialiValue)
   }
 
   function renderSquare(i) {
