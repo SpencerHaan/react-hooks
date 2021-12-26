@@ -43,13 +43,14 @@ function PokemonInfo({pokemonName}) {
     )
   }, [pokemonName, setState])
 
-  switch (state.status) {
+  const {status, pokemon, error} = state
+  switch (status) {
     case 'pending':
       return <PokemonInfoFallback name={pokemonName} />
     case 'resolved':
-      return <PokemonDataView pokemon={state.pokemon} />
+      return <PokemonDataView pokemon={pokemon} />
     case 'rejected':
-      throw state.error
+      throw error
     case 'idle':
       return 'Submit a pokemon'
     default:
@@ -69,7 +70,7 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary key={pokemonName} FallbackComponent={ErrorFallback}>
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
